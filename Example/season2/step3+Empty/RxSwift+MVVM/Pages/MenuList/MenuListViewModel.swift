@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import RxSwift
 
 class MenuListViewModel {
     
@@ -19,5 +20,7 @@ class MenuListViewModel {
     ]
     
     var itemsCount: Int = 5
-    var totalPrice: Int = 10_000
+    var totalPrice: PublishSubject<Int> = PublishSubject()
+    
+    // Subject  // 외부에서 값을 통제 가능
 }
