@@ -11,16 +11,24 @@ import RxSwift
 
 class MenuListViewModel {
     
-    var menus: [Menu] = [
-        Menu(name: "튀김1", price: 100, count: 0),
-        Menu(name: "튀김1", price: 100, count: 0),
-        Menu(name: "튀김1", price: 100, count: 0),
-        Menu(name: "튀김1", price: 100, count: 0),
-        Menu(name: "튀김1", price: 100, count: 0),
-    ]
+    var menuObservable = BehaviorSubject<[Menu]>(value: [])
     
-    var itemsCount: Int = 5
-    var totalPrice: PublishSubject<Int> = PublishSubject()
+    lazy var itemsCount = menuObservable.map {
+        $0.map { $0.count }.reduce(0, +)
+    }
     
-    // Subject  // 외부에서 값을 통제 가능
+    lazy var totalPrice = menuObservable.map {
+        $0.map { $0.price * $0.count }.reduce(0, +)
+    }
+    
+    init() {
+        let menus: [Menu] = [
+            Menu(name: "튀김1", price: 100, count: 0),
+            Menu(name: "튀김1", price: 100, count: 0),
+            Menu(name: "튀김1", price: 100, count: 0),
+            Menu(name: "튀김1", price: 100, count: 0),
+            Menu(name: "튀김1", price: 100, count: 0),
+        ]
+        menuObservable.onNext(menus)
+    }
 }
