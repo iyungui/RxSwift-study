@@ -48,6 +48,7 @@ class ViewController: UIViewController {
     
     
     // 비동기 작업 -> completion 같은 클로저가 아니라,  리턴값으로 전달하기 위해서 만들어진 util이 바로 RxSwift
+<<<<<<< HEAD
     func downloadJson(_ url: String) -> Observable<String?> {   // Observable은 나중에 생기는 데이터
         return Observable.create { f in
             DispatchQueue.global().async {
@@ -57,6 +58,29 @@ class ViewController: UIViewController {
                 DispatchQueue.main.async {
                     f.onNext(json)
                     f.onCompleted()
+=======
+    
+    
+    // Observable's Life cycle
+    // 1. Create
+    // 2. Subscribe
+    // 3. onNext
+    
+    // ---- END ----
+    // 4. onCompleted // onError
+    // 5. Disposed
+    
+    func downloadJson(_ url: String) -> Observable<String> {   // Observable은 나중에 생기는 데이터
+        //MARK: - 1. 비동기로 생기는 데이터를 Observable로 감싸서 리턴하는 방법
+        
+        return Observable.create { emmiter in
+            
+            let url = URL(string: url)!
+            let task = URLSession.shared.dataTask(with: url) { data, _, err in
+                guard err == nil else {
+                    emmiter.onError(err!)
+                    return
+>>>>>>> 08eac3a (zip)
                 }
             }
             
@@ -73,6 +97,7 @@ class ViewController: UIViewController {
         editView.text = ""
         self.setVisibleWithAnimation(self.activityIndicator, true)
         
+<<<<<<< HEAD
         let disposable = downloadJson(MEMBER_LIST_URL)
             .subscribe { event in
                 switch event {
@@ -85,6 +110,19 @@ class ViewController: UIViewController {
                     break
                 }
             }
+=======
+        //MARK: - 2. Observable로 오는 데이터를 받아서 처리하는 방법
+        let jsonObservable = downloadJson(MEMBER_LIST_URL)
+        let helloObservable = Observable.just("Hello World")
+        
+        Observable.zip(jsonObservable, helloObservable) { $1 + "\n" + $0 }
+            .observeOn(MainScheduler.instance)
+            .subscribe(onNext: { json in
+                self.editView.text = json
+                self.setVisibleWithAnimation(self.activityIndicator, false)
+            })
+        
+>>>>>>> 08eac3a (zip)
         
 //        disposable.dispose()
     }
