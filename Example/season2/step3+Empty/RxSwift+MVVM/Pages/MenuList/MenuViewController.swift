@@ -17,9 +17,7 @@ class MenuViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        itemCountLabel.text = "\(viewModel.itemsCount)"
-        totalPrice.text = viewModel.totalPrice.currencyKR()
+        updateUI()
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -49,7 +47,16 @@ class MenuViewController: UIViewController {
     @IBAction func onOrder(_ sender: UIButton) {
         // TODO: no selection
         // showAlert("Order Fail", "No Orders")
-        performSegue(withIdentifier: "OrderViewController", sender: nil)
+//        performSegue(withIdentifier: "OrderViewController", sender: nil)
+        
+        viewModel.totalPrice += 100
+        
+        updateUI()
+    }
+    
+    func updateUI() {
+        itemCountLabel.text = "\(viewModel.itemsCount)"
+        totalPrice.text = viewModel.totalPrice.currencyKR()
     }
 }
 
