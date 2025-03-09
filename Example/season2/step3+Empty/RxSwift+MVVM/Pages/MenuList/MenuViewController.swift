@@ -37,9 +37,8 @@ class MenuViewController: UIViewController {
         
         viewModel.itemsCount
             .map { "\($0)" }
-            .catchErrorJustReturn("")
-            .observeOn(MainScheduler.instance)
-            .bind(to: itemCountLabel.rx.text)   // bind makes to prevent ref cycle
+            .asDriver(onErrorJustReturn: "")
+            .drive(itemCountLabel.rx.text)
             .disposed(by: disposeBag)
         
         viewModel.totalPrice
